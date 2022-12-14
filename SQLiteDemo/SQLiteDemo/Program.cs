@@ -56,16 +56,8 @@ static void UpdateAxises(String path1, String path2)
     Coordinate area1MaxCoordinates = MaxAxisCoordinates(path1);
     Coordinate area2MaxCoordinates = MaxAxisCoordinates(path2);
 
-    //Coordinate maxCoordinates = area1MaxCoordinates.FindMax(area2MaxCoordinates);
-    //Coordinate minCoordinates = area1MinCoordinates.FindMin(area2MinCoordinates);
-
-    Coordinate.FindValue findMaxCoordinates = Coordinate.FindMax; 
-    Coordinate.FindValue findMinCoordinates = Coordinate.FindMin;
-
-    Coordinate minCoordinates = findMinCoordinates(area1MinCoordinates, area2MinCoordinates);
-    Coordinate maxCoordinates = findMaxCoordinates(area1MaxCoordinates, area2MaxCoordinates);
-
-
+    Coordinate minCoordinates = Coordinate.CompareCoordinates(area1MinCoordinates, area2MinCoordinates, Math.Min);
+    Coordinate maxCoordinates = Coordinate.CompareCoordinates(area1MaxCoordinates, area2MaxCoordinates, Math.Max);
 
     String query = "UPDATE gpkg_contents SET min_x = "+ minCoordinates.X+
         ", min_y = "+ minCoordinates.Y+
@@ -78,9 +70,9 @@ static void UpdateAxises(String path1, String path2)
 
 }
 
-static void InsertData( ArrayList data, String PathOfGkpgToUpdate)
+static void InsertData(List<GeoPackage> data, String gpkgPath)
 {
-    SQLiteConnection conn = new SQLiteConnection("Data Source="+ PathOfGkpgToUpdate);
+    SQLiteConnection conn = new SQLiteConnection("Data Source="+ gpkgPath);
     conn.Open();
 
     SQLiteCommand command;
@@ -100,16 +92,16 @@ static void InsertData( ArrayList data, String PathOfGkpgToUpdate)
     conn.Close();
 }
 
-static ArrayList ReadData(String PathOfGkpgToRead)
+static List<GeoPackage> ReadData(String gpkgPath)
 {
-    SQLiteConnection conn = new SQLiteConnection("Data Source=" + PathOfGkpgToRead);
+    SQLiteConnection conn = new SQLiteConnection("Data Source=" + gpkgPath);
     conn.Open();
 
  
     SQLiteDataReader dataReader;
     String query = "SELECT * FROM O_arzi_mz_w84geo_Apr19_gpkg_18_0";
     SQLiteCommand command = new SQLiteCommand(query, conn);
-    ArrayList geoPackages = new ArrayList();
+    List<GeoPackage> geoPackages = new List<GeoPackage>();
     GeoPackage geoPackage = new GeoPackage();
     dataReader = command.ExecuteReader();
 

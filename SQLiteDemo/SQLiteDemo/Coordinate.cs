@@ -21,24 +21,14 @@ namespace SQLiteDemo
         {
         }
 
-        public delegate Coordinate FindValue(Coordinate coordinate1, Coordinate coordinate2);
+        public delegate double CompareFunc(double value1, double value2);
 
-        public static Coordinate FindMax(Coordinate coordinate1, Coordinate coordinate2)
+        public static Coordinate CompareCoordinates(Coordinate coordinate1, Coordinate coordinate2, CompareFunc compareValue)
         {
-            double maxX = Math.Max(coordinate2.X, coordinate1.X);
-            double maxy = Math.Max(coordinate2.Y, coordinate1.Y);
+            double maxX = compareValue(coordinate2.X, coordinate1.X);
+            double maxy = compareValue(coordinate2.Y, coordinate1.Y);
 
             return new Coordinate(maxX, maxy);
         }
-
-        public static Coordinate FindMin(Coordinate coordinate1, Coordinate coordinate2)
-        {
-            double minX = Math.Min(coordinate2.X, coordinate1.X);
-            double miny = Math.Min(coordinate2.Y, coordinate1.Y);
-
-            return new Coordinate(minX, miny);
-        }
-
- 
     }
 }
