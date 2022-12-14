@@ -8,38 +8,38 @@ namespace SQLiteDemo
 {
     internal class GeoPackage
     {
-		int zoomLevel;
-		int tileColumn;
-		int tileRow;
-		byte[] tileData;
+		int ZoomLevel;
+		int TileColumn;
+		int TileRow;
+		byte[] TileData;
 
 		public GeoPackage(int zoomLevel, int tileColumn, int tileRow, byte[] tileData)
 		{
-			this.zoomLevel = zoomLevel;
-			this.tileColumn = tileColumn;
-			this.tileRow = tileRow;
-			this.tileData = tileData;
+			this.ZoomLevel = zoomLevel;
+			this.TileColumn = tileColumn;
+			this.TileRow = tileRow;
+			this.TileData = tileData;
 		}
 		public GeoPackage() { }
 
 		public int GetZoomLevel()
 		{
-			return zoomLevel;
+			return ZoomLevel;
 		}
 
 		public int GetTileColumn()
 		{
-			return tileColumn;
+			return TileColumn;
 		}
 
 		public int GetTileRow()
 		{
-			return tileRow;
+			return TileRow;
 		}
 
 		public byte[] GetTileData()
 		{
-			return tileData;
+			return TileData;
 		}
 	}
 }

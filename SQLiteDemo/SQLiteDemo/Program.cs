@@ -2,15 +2,15 @@
 using System.Data.SQLite;
 using System.Collections;
 
-InputOutput.Print("GKPG to expand:");
-String path1 = InputOutput.GetPath();
-InputOutput.Print("GKPG to pull data:");
-String path2 = InputOutput.GetPath();
+Console.WriteLine("Please enter the path of the GKPG to expand:");
+String path1 = Console.ReadLine();
+Console.WriteLine("Please enter the path of the GKPG to pull data:");
+String path2 = Console.ReadLine();
 InsertData( ReadData(path2), path1);
 UpdateAxises(path1, path2);
 Console.WriteLine("finished");
 
-static Coordinates MinAxisCoordinates(String path)
+static Coordinate MinAxisCoordinates(String path)
 {
     SQLiteConnection connArea = new SQLiteConnection("Data Source=" + path);
     connArea.Open();
@@ -18,17 +18,17 @@ static Coordinates MinAxisCoordinates(String path)
     String query = "SELECT * FROM gpkg_contents";
     SQLiteCommand commandArea = new SQLiteCommand(query, connArea);
     SQLiteDataReader dataReader = commandArea.ExecuteReader();
-    Coordinates areaMinCoordinates = new Coordinates();
+    Coordinate areaMinCoordinates = new Coordinate();
 
     while (dataReader.Read())
     {
-        areaMinCoordinates = new Coordinates(dataReader.GetDouble(5), dataReader.GetDouble(6));
+        areaMinCoordinates = new Coordinate(dataReader.GetDouble(5), dataReader.GetDouble(6));
     }
 
     return areaMinCoordinates;
 }
 
-static Coordinates MaxAxisCoordinates(String path)
+static Coordinate MaxAxisCoordinates(String path)
 {
     SQLiteConnection connArea = new SQLiteConnection("Data Source=" + path);
     connArea.Open();
@@ -36,11 +36,11 @@ static Coordinates MaxAxisCoordinates(String path)
     String query = "SELECT * FROM gpkg_contents";
     SQLiteCommand commandArea = new SQLiteCommand(query, connArea);
     SQLiteDataReader dataReader = commandArea.ExecuteReader();
-    Coordinates areaMaxCoordinates = new Coordinates();
+    Coordinate areaMaxCoordinates = new Coordinate();
 
     while (dataReader.Read())
     {
-        areaMaxCoordinates = new Coordinates(dataReader.GetDouble(7), dataReader.GetDouble(8));
+        areaMaxCoordinates = new Coordinate(dataReader.GetDouble(7), dataReader.GetDouble(8));
     }
 
     return areaMaxCoordinates;
@@ -51,14 +51,26 @@ static void UpdateAxises(String path1, String path2)
     SQLiteConnection connArea1 = new SQLiteConnection("Data Source=" + path1);
     connArea1.Open();
 
-    Coordinates area1MinCoordinates = MinAxisCoordinates(path1);
-    Coordinates area2MinCoordinates = MinAxisCoordinates(path2);
-    Coordinates area1MaxCoordinates = MaxAxisCoordinates(path1);
-    Coordinates area2MaxCoordinates = MaxAxisCoordinates(path2);
+    Coordinate area1MinCoordinates = MinAxisCoordinates(path1);
+    Coordinate area2MinCoordinates = MinAxisCoordinates(path2);
+    Coordinate area1MaxCoordinates = MaxAxisCoordinates(path1);
+    Coordinate area2MaxCoordinates = MaxAxisCoordinates(path2);
 
-    Coordinates maxCoordinates = area1MaxCoordinates.findMax(area2MaxCoordinates);
-    Coordinates minCoordinates = area1MinCoordinates.findMin(area2MinCoordinates);
-    String query = "UPDATE gpkg_contents SET min_x = "+ minCoordinates.GetX()+ ", min_y = "+minCoordinates.GetY()+", max_x = " + maxCoordinates.GetX() + ", max_y = " + maxCoordinates.GetY()+ ";";
+    //Coordinate maxCoordinates = area1MaxCoordinates.FindMax(area2MaxCoordinates);
+    //Coordinate minCoordinates = area1MinCoordinates.FindMin(area2MinCoordinates);
+
+    Coordinate.FindValue findMaxCoordinates = Coordinate.FindMax; 
+    Coordinate.FindValue findMinCoordinates = Coordinate.FindMin;
+
+    Coordinate minCoordinates = findMinCoordinates(area1MinCoordinates, area2MinCoordinates);
+    Coordinate maxCoordinates = findMaxCoordinates(area1MaxCoordinates, area2MaxCoordinates);
+
+
+
+    String query = "UPDATE gpkg_contents SET min_x = "+ minCoordinates.X+
+        ", min_y = "+ minCoordinates.Y+
+        ", max_x = " + maxCoordinates.X+
+        ", max_y = " + maxCoordinates.Y+ ";";
     SQLiteCommand commandArea1 = new SQLiteCommand(query, connArea1);
 
     commandArea1.ExecuteNonQuery();
