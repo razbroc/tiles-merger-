@@ -17,18 +17,21 @@ namespace SQLiteDemo
             Y = y;
         }
 
-        public Coordinate()
-        {
-        }
-
         public delegate double CompareFunc(double value1, double value2);
 
         public static Coordinate CompareCoordinates(Coordinate coordinate1, Coordinate coordinate2, CompareFunc compareValue)
         {
-            double maxX = compareValue(coordinate2.X, coordinate1.X);
-            double maxy = compareValue(coordinate2.Y, coordinate1.Y);
+            double X = compareValue(coordinate2.X, coordinate1.X);
+            double y = compareValue(coordinate2.Y, coordinate1.Y);
 
-            return new Coordinate(maxX, maxy);
+            return new Coordinate(X, y);
+        }
+
+        public override bool Equals(object? obj)
+        {
+            return obj is Coordinate coordinate &&
+                   X == coordinate.X &&
+                   Y == coordinate.Y;
         }
     }
 }
