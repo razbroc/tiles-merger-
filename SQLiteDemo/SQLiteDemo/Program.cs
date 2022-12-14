@@ -59,11 +59,13 @@ static void UpdateAxises(String path1, String path2)
     Coordinate minCoordinates = Coordinate.CompareCoordinates(area1MinCoordinates, area2MinCoordinates, Math.Min);
     Coordinate maxCoordinates = Coordinate.CompareCoordinates(area1MaxCoordinates, area2MaxCoordinates, Math.Max);
 
-    String query = "UPDATE gpkg_contents SET min_x = "+ minCoordinates.X+
-        ", min_y = "+ minCoordinates.Y+
-        ", max_x = " + maxCoordinates.X+
-        ", max_y = " + maxCoordinates.Y+ ";";
+    String query = "UPDATE gpkg_contents SET min_x = @param1, min_y = @param2, max_x = @param3, max_y = @param4 ;";
     SQLiteCommand commandArea1 = new SQLiteCommand(query, connArea1);
+
+    commandArea1.Parameters.AddWithValue("@param1", minCoordinates.X);
+    commandArea1.Parameters.AddWithValue("@param2", minCoordinates.Y);
+    commandArea1.Parameters.AddWithValue("@param3", maxCoordinates.X);
+    commandArea1.Parameters.AddWithValue("@param4", maxCoordinates.Y);
 
     commandArea1.ExecuteNonQuery();
     connArea1.Close();
@@ -84,8 +86,11 @@ static void InsertData(List<GeoPackage> data, String gpkgPath)
             tileColumn = ((GeoPackage)data[index]).GetTileColumn(), 
             tileRow = ((GeoPackage)data[index]).GetTileRow();
         byte[] tileData = ((GeoPackage)data[index]).GetTileData();
-        String query = "INSERT or REPLACE INTO O_arzi_mz_w84geo_Apr19_gpkg_18_0(zoom_level, tile_column, tile_row, tile_data)" + " VALUES(" + zoomLevel + "," + tileColumn + "," + tileRow + ", @tileData)";
+        String query = "INSERT or REPLACE INTO O_arzi_mz_w84geo_Apr19_gpkg_18_0(zoom_level, tile_column, tile_row, tile_data)" + " VALUES( @zoomLevel, @tileColumn, @tileRow, @tileData)";
         command = new SQLiteCommand(query, conn);
+        command.Parameters.AddWithValue("@zoomLevel", zoomLevel);
+        command.Parameters.AddWithValue("@tileColumn", tileColumn);
+        command.Parameters.AddWithValue("@tileRow", tileRow);
         command.Parameters.AddWithValue("@tileData", tileData);
         command.ExecuteNonQuery();
     }
