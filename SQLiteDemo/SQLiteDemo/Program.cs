@@ -133,13 +133,12 @@ static List<GeoPackage> ReadData(String gpkgPath)
 {
     SQLiteConnection conn = new SQLiteConnection($"Data Source={gpkgPath}");
     conn.Open();
-
- 
     SQLiteDataReader dataReader;
     String query = "SELECT * FROM O_arzi_mz_w84geo_Apr19_gpkg_18_0";
     SQLiteCommand command = new SQLiteCommand(query, conn);
     List<GeoPackage> geoPackages = new List<GeoPackage>();
     GeoPackage geoPackage = new GeoPackage();
+
     try
     {
         dataReader = command.ExecuteReader();
