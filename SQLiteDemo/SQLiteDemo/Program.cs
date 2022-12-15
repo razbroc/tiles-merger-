@@ -15,7 +15,29 @@ InsertData( ReadData(sourcePath), basePath);
 UpdateExtent(basePath, sourcePath);
 Console.WriteLine("your request completed succssefully");
 
-static Coordinate AxisEdgeCoordinates(String path, Coordinate.CompareFunc edgeSide)
+static Coordinate AxisEdgeType(String path, Edge edgeSide)
+{
+    int xCol;
+    int yCol;
+    Coordinate.CompareFunc compareFunc;
+
+    if (edgeSide == Edge.Max)
+    {
+        xCol = X_MAX_COL;
+        yCol = Y_MAX_COL;
+        compareFunc = Math.Max;
+    }
+    else
+    {
+        xCol = X_MIN_COL;
+        yCol = Y_MIN_COL;
+        compareFunc = Math.Min;
+    }
+
+    return AxisEdgeCoordinates(path, compareFunc, xCol, yCol);
+}
+
+static Coordinate AxisEdgeCoordinates(String path, Coordinate.CompareFunc compareFunc, int xCol, int yCol)
 {
     SQLiteConnection connection = new SQLiteConnection($"Data Source={path}");
     connection.Open();
@@ -26,20 +48,12 @@ static Coordinate AxisEdgeCoordinates(String path, Coordinate.CompareFunc edgeSi
     Coordinate areaCoordinates = null;
     Coordinate edgeCoordinates = null;
     Coordinate comparedCoordinates = null;
-    bool firstIteration = true;
-    int xColRequired = edgeSide == Math.Max ? X_MAX_COL : X_MIN_COL;
-    int yColRequired = edgeSide == Math.Max ? Y_MAX_COL : Y_MIN_COL;
-
+    dataReader.Read();
+    edgeCoordinates = new Coordinate(dataReader.GetDouble(xCol), dataReader.GetDouble(yCol));
 
     while (dataReader.Read())
     {
-        areaCoordinates = new Coordinate(dataReader.GetDouble(xColRequired), dataReader.GetDouble(yColRequired));
-
-        if (firstIteration)
-        {
-            edgeCoordinates = new Coordinate(dataReader.GetDouble(xColRequired), dataReader.GetDouble(yColRequired));
-            firstIteration = false;
-        }
+        areaCoordinates = new Coordinate(dataReader.GetDouble(xCol), dataReader.GetDouble(yCol));
 
         /*
          * in case  "gpkg_contents" table has more than one row,
@@ -47,24 +61,11 @@ static Coordinate AxisEdgeCoordinates(String path, Coordinate.CompareFunc edgeSi
          * therefore we need to determine whether we are checking for a max/min edge situation - 
          * and find the fitting edge for that situation.
          * */
-
-        if (edgeSide == Math.Max) 
-        {
-            comparedCoordinates = Coordinate.CompareCoordinates(edgeCoordinates, areaCoordinates, edgeSide);
-            if (!Coordinate.Equals(comparedCoordinates, edgeCoordinates))
+        comparedCoordinates = Coordinate.CompareCoordinates(edgeCoordinates, areaCoordinates, compareFunc);
+        if (!Coordinate.Equals(comparedCoordinates, edgeCoordinates))
             {
                 edgeCoordinates = comparedCoordinates;
             }
-        }
-
-        if (edgeSide == Math.Min) 
-        {
-            comparedCoordinates = Coordinate.CompareCoordinates(edgeCoordinates, areaCoordinates, edgeSide);
-            if (!Coordinate.Equals(comparedCoordinates, edgeCoordinates))
-            {
-                edgeCoordinates = comparedCoordinates;
-            }
-        }
     }
 
     return edgeCoordinates;
@@ -75,10 +76,10 @@ static void UpdateExtent(String basePath, String sourcePath)
     SQLiteConnection connectionToBaseGKPG = new SQLiteConnection($"Data Source={basePath}");
     connectionToBaseGKPG.Open();
 
-    Coordinate area1MinCoordinates = AxisEdgeCoordinates(basePath, Math.Min);
-    Coordinate area2MinCoordinates = AxisEdgeCoordinates(sourcePath, Math.Min);
-    Coordinate area1MaxCoordinates = AxisEdgeCoordinates(basePath, Math.Max);
-    Coordinate area2MaxCoordinates = AxisEdgeCoordinates(sourcePath, Math.Max);
+    Coordinate area1MinCoordinates = AxisEdgeType(basePath, Edge.Min);
+    Coordinate area2MinCoordinates = AxisEdgeType(sourcePath, Edge.Min);
+    Coordinate area1MaxCoordinates = AxisEdgeType(basePath, Edge.Max);
+    Coordinate area2MaxCoordinates = AxisEdgeType(sourcePath, Edge.Max);
 
     Coordinate minCoordinates = Coordinate.CompareCoordinates(area1MinCoordinates, area2MinCoordinates, Math.Min);
     Coordinate maxCoordinates = Coordinate.CompareCoordinates(area1MaxCoordinates, area2MaxCoordinates, Math.Max);
@@ -158,4 +159,9 @@ static List<GeoPackage> ReadData(String gpkgPath)
     conn.Close();
 
     return geoPackages;
+}
+enum Edge
+{
+    Max,
+    Min
 }
