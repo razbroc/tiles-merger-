@@ -120,10 +120,10 @@ static void InsertData(List<GeoPackage> data, String gpkgPath)
         {
             command.ExecuteNonQuery();
         }
-        catch
+        catch (Exception ex)
         {
             Console.WriteLine("geopackge is damaged, can't perform request!");
-            throw new Exception("geopackage is empty or damaged.");
+            throw new Exception($"geopackage is empty or damaged. { ex.Message }");
         }
         
     }
@@ -144,10 +144,10 @@ static List<GeoPackage> ReadData(String gpkgPath)
     {
         dataReader = command.ExecuteReader();
     }
-    catch
+    catch (Exception ex) 
     {
         Console.WriteLine("can't perform request");
-        throw new Exception("geopackage is empty/damaged or path is wrong.");
+        throw new Exception($"geopackage is empty or damaged. {ex.Message}");
     }
 
     while (dataReader.Read())
