@@ -15,7 +15,7 @@ InsertData( ReadData(path2), path1);
 UpdateAxises(path1, path2);
 Console.WriteLine("your request completed succssefully");
 
-static Coordinate AxisEdgeCoordinates(int xCol, int yCol, String path, Coordinate.CompareFunc edgeSide)
+static Coordinate AxisEdgeCoordinates(String path, Coordinate.CompareFunc edgeSide)
 {
     SQLiteConnection connArea = new SQLiteConnection("Data Source=" + path);
     connArea.Open();
@@ -27,14 +27,17 @@ static Coordinate AxisEdgeCoordinates(int xCol, int yCol, String path, Coordinat
     Coordinate edgeCoordinates = null;
     Coordinate comparedCoordinates = null;
     bool firstIteration = true;
+    int xColRequired = edgeSide == Math.Max ? X_MAX_COL : X_MIN_COL;
+    int yColRequired = edgeSide == Math.Max ? Y_MAX_COL : Y_MIN_COL;
+
 
     while (dataReader.Read())
     {
-        areaCoordinates = new Coordinate(dataReader.GetDouble(xCol), dataReader.GetDouble(yCol));
+        areaCoordinates = new Coordinate(dataReader.GetDouble(xColRequired), dataReader.GetDouble(yColRequired));
 
         if (firstIteration)
         {
-            edgeCoordinates = new Coordinate(dataReader.GetDouble(xCol), dataReader.GetDouble(yCol));
+            edgeCoordinates = new Coordinate(dataReader.GetDouble(xColRequired), dataReader.GetDouble(yColRequired));
             firstIteration = false;
         }
 
@@ -73,10 +76,10 @@ static void UpdateAxises(String path1, String path2)
     SQLiteConnection connArea1 = new SQLiteConnection("Data Source=" + path1);
     connArea1.Open();
 
-    Coordinate area1MinCoordinates = AxisEdgeCoordinates(X_MIN_COL, Y_MIN_COL, path1, Math.Min);
-    Coordinate area2MinCoordinates = AxisEdgeCoordinates(X_MIN_COL, Y_MIN_COL, path2, Math.Min);
-    Coordinate area1MaxCoordinates = AxisEdgeCoordinates(X_MAX_COL, Y_MAX_COL, path1, Math.Max);
-    Coordinate area2MaxCoordinates = AxisEdgeCoordinates(X_MAX_COL, Y_MAX_COL, path2, Math.Max);
+    Coordinate area1MinCoordinates = AxisEdgeCoordinates(path1, Math.Min);
+    Coordinate area2MinCoordinates = AxisEdgeCoordinates(path2, Math.Min);
+    Coordinate area1MaxCoordinates = AxisEdgeCoordinates(path1, Math.Max);
+    Coordinate area2MaxCoordinates = AxisEdgeCoordinates(path2, Math.Max);
 
     Coordinate minCoordinates = Coordinate.CompareCoordinates(area1MinCoordinates, area2MinCoordinates, Math.Min);
     Coordinate maxCoordinates = Coordinate.CompareCoordinates(area1MaxCoordinates, area2MaxCoordinates, Math.Max);
