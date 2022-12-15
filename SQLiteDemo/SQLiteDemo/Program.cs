@@ -6,9 +6,9 @@ using System.Data.SQLite;
  const int X_MAX_COL = 7;
  const int Y_MAX_COL = 8;
 
-Console.WriteLine("Please enter the path of the GKPG to expand:");
+Console.WriteLine("Please enter the path of base GKPG:");
 String basePath = Console.ReadLine();
-Console.WriteLine("Please enter the path of the GKPG to pull data:");
+Console.WriteLine("Please enter the path of source GKPG:");
 String sourcePath = Console.ReadLine();
 Console.WriteLine("proccessing your request...");
 InsertData( ReadData(sourcePath), basePath);
