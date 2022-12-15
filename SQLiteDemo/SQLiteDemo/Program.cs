@@ -17,11 +17,11 @@ Console.WriteLine("your request completed succssefully");
 
 static Coordinate AxisEdgeCoordinates(String path, Coordinate.CompareFunc edgeSide)
 {
-    SQLiteConnection connArea = new SQLiteConnection("Data Source=" + path);
-    connArea.Open();
+    SQLiteConnection connection = new SQLiteConnection($"Data Source={path}");
+    connection.Open();
 
     String query = "SELECT * FROM gpkg_contents";
-    SQLiteCommand commandArea = new SQLiteCommand(query, connArea);
+    SQLiteCommand commandArea = new SQLiteCommand(query, connection);
     SQLiteDataReader dataReader = commandArea.ExecuteReader();
     Coordinate areaCoordinates = null;
     Coordinate edgeCoordinates = null;
@@ -72,7 +72,7 @@ static Coordinate AxisEdgeCoordinates(String path, Coordinate.CompareFunc edgeSi
 
 static void UpdateAxises(String path1, String path2)
 {
-    SQLiteConnection connArea1 = new SQLiteConnection("Data Source=" + path1);
+    SQLiteConnection connArea1 = new SQLiteConnection($"Data Source={path}");
     connArea1.Open();
 
     Coordinate area1MinCoordinates = AxisEdgeCoordinates(path1, Math.Min);
@@ -97,7 +97,7 @@ static void UpdateAxises(String path1, String path2)
 
 static void InsertData(List<GeoPackage> data, String gpkgPath)
 {
-    SQLiteConnection conn = new SQLiteConnection("Data Source="+ gpkgPath);
+    SQLiteConnection conn = new SQLiteConnection($"Data Source={gpkgPath}");
     conn.Open();
     SQLiteCommand command;
     SQLiteParameter parm;
@@ -121,7 +121,7 @@ static void InsertData(List<GeoPackage> data, String gpkgPath)
 
 static List<GeoPackage> ReadData(String gpkgPath)
 {
-    SQLiteConnection conn = new SQLiteConnection("Data Source=" + gpkgPath);
+    SQLiteConnection conn = new SQLiteConnection($"Data Source={gpkgPath}");
     conn.Open();
 
  
