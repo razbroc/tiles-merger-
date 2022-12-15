@@ -13,12 +13,12 @@ namespace SQLiteDemo
 		public int TileRow { get; }
 		public byte[] TileData { get; }
 
-		public GeoPackage(int zoomLevel, int tileColumn, int tileRow, byte[] tileData)
+		public GeoPackage(int ZoomLevel, int TileColumn, int TileRow, byte[] TileData)
 		{
-			this.ZoomLevel = zoomLevel;
-			this.TileColumn = tileColumn;
-			this.TileRow = tileRow;
-			this.TileData = tileData;
+			this.ZoomLevel = ZoomLevel;
+			this.TileColumn = TileColumn;
+			this.TileRow = TileRow;
+			this.TileData = TileData;
 		}
 		public GeoPackage() { }
 	}

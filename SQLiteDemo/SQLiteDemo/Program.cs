@@ -12,7 +12,7 @@ Console.WriteLine("Please enter the path of source GKPG:");
 String sourcePath = Console.ReadLine();
 Console.WriteLine("proccessing your request...");
 InsertData( ReadData(sourcePath), basePath);
-UpdateAxises(basePath, sourcePath);
+UpdateExtent(basePath, sourcePath);
 Console.WriteLine("your request completed succssefully");
 
 static Coordinate AxisEdgeCoordinates(String path, Coordinate.CompareFunc edgeSide)
@@ -70,21 +70,21 @@ static Coordinate AxisEdgeCoordinates(String path, Coordinate.CompareFunc edgeSi
     return edgeCoordinates;
 }
 
-static void UpdateAxises(String path1, String path2)
+static void UpdateExtent(String basePath, String sourcePath)
 {
-    SQLiteConnection connArea1 = new SQLiteConnection($"Data Source={path}");
-    connArea1.Open();
+    SQLiteConnection connectionToBaseGKPG = new SQLiteConnection($"Data Source={basePath}");
+    connectionToBaseGKPG.Open();
 
-    Coordinate area1MinCoordinates = AxisEdgeCoordinates(path1, Math.Min);
-    Coordinate area2MinCoordinates = AxisEdgeCoordinates(path2, Math.Min);
-    Coordinate area1MaxCoordinates = AxisEdgeCoordinates(path1, Math.Max);
-    Coordinate area2MaxCoordinates = AxisEdgeCoordinates(path2, Math.Max);
+    Coordinate area1MinCoordinates = AxisEdgeCoordinates(basePath, Math.Min);
+    Coordinate area2MinCoordinates = AxisEdgeCoordinates(sourcePath, Math.Min);
+    Coordinate area1MaxCoordinates = AxisEdgeCoordinates(basePath, Math.Max);
+    Coordinate area2MaxCoordinates = AxisEdgeCoordinates(sourcePath, Math.Max);
 
     Coordinate minCoordinates = Coordinate.CompareCoordinates(area1MinCoordinates, area2MinCoordinates, Math.Min);
     Coordinate maxCoordinates = Coordinate.CompareCoordinates(area1MaxCoordinates, area2MaxCoordinates, Math.Max);
 
     String query = "UPDATE gpkg_contents SET min_x = @param1, min_y = @param2, max_x = @param3, max_y = @param4 ;";
-    SQLiteCommand commandArea1 = new SQLiteCommand(query, connArea1);
+    SQLiteCommand commandArea1 = new SQLiteCommand(query, connectionToBaseGKPG);
 
     commandArea1.Parameters.AddWithValue("@param1", minCoordinates.X);
     commandArea1.Parameters.AddWithValue("@param2", minCoordinates.Y);
@@ -92,7 +92,7 @@ static void UpdateAxises(String path1, String path2)
     commandArea1.Parameters.AddWithValue("@param4", maxCoordinates.Y);
 
     commandArea1.ExecuteNonQuery();
-    connArea1.Close();
+    connectionToBaseGKPG.Close();
 }
 
 static void InsertData(List<GeoPackage> data, String gpkgPath)
@@ -114,7 +114,17 @@ static void InsertData(List<GeoPackage> data, String gpkgPath)
         command.Parameters.AddWithValue("@tileColumn", tileColumn);
         command.Parameters.AddWithValue("@tileRow", tileRow);
         command.Parameters.AddWithValue("@tileData", tileData);
-        command.ExecuteNonQuery();
+
+        try
+        {
+            command.ExecuteNonQuery();
+        }
+        catch
+        {
+            Console.WriteLine("geopackge is damaged, can't perform request!");
+            throw new Exception("geopackage is empty or damaged.");
+        }
+        
     }
     conn.Close();
 }
@@ -130,7 +140,15 @@ static List<GeoPackage> ReadData(String gpkgPath)
     SQLiteCommand command = new SQLiteCommand(query, conn);
     List<GeoPackage> geoPackages = new List<GeoPackage>();
     GeoPackage geoPackage = new GeoPackage();
-    dataReader = command.ExecuteReader();
+    try
+    {
+        dataReader = command.ExecuteReader();
+    }
+    catch
+    {
+        Console.WriteLine("can't perform request");
+        throw new Exception("geopackage is empty/damaged or path is wrong.");
+    }
 
     while (dataReader.Read())
     {
