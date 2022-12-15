@@ -70,7 +70,6 @@ static Coordinate AxisEdgeCoordinates(String path, Coordinate.CompareFunc edgeSi
     return edgeCoordinates;
 }
 
-//think of while logic
 static void UpdateAxises(String path1, String path2)
 {
     SQLiteConnection connArea1 = new SQLiteConnection("Data Source=" + path1);
@@ -105,10 +104,10 @@ static void InsertData(List<GeoPackage> data, String gpkgPath)
 
     for (int index = 0; index < data.Count; index++)
     {
-        int zoomLevel = ((GeoPackage) data[index]).GetZoomLevel(),
-            tileColumn = ((GeoPackage)data[index]).GetTileColumn(), 
-            tileRow = ((GeoPackage)data[index]).GetTileRow();
-        byte[] tileData = ((GeoPackage)data[index]).GetTileData();
+        int zoomLevel = ((GeoPackage) data[index]).ZoomLevel,
+            tileColumn = ((GeoPackage)data[index]).TileColumn, 
+            tileRow = ((GeoPackage)data[index]).TileRow;
+        byte[] tileData = ((GeoPackage)data[index]).TileData;
         String query = "INSERT or REPLACE INTO O_arzi_mz_w84geo_Apr19_gpkg_18_0(zoom_level, tile_column, tile_row, tile_data)" + " VALUES( @zoomLevel, @tileColumn, @tileRow, @tileData)";
         command = new SQLiteCommand(query, conn);
         command.Parameters.AddWithValue("@zoomLevel", zoomLevel);

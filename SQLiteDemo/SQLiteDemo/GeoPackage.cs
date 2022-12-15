@@ -8,10 +8,10 @@ namespace SQLiteDemo
 {
     internal class GeoPackage
     {
-		int ZoomLevel;
-		int TileColumn;
-		int TileRow;
-		byte[] TileData;
+		public int ZoomLevel { get; }
+		public int TileColumn { get; }
+		public int TileRow { get; }
+		public byte[] TileData { get; }
 
 		public GeoPackage(int zoomLevel, int tileColumn, int tileRow, byte[] tileData)
 		{
@@ -21,25 +21,5 @@ namespace SQLiteDemo
 			this.TileData = tileData;
 		}
 		public GeoPackage() { }
-
-		public int GetZoomLevel()
-		{
-			return ZoomLevel;
-		}
-
-		public int GetTileColumn()
-		{
-			return TileColumn;
-		}
-
-		public int GetTileRow()
-		{
-			return TileRow;
-		}
-
-		public byte[] GetTileData()
-		{
-			return TileData;
-		}
 	}
 }
