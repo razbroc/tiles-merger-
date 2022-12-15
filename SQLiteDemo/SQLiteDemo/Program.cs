@@ -7,12 +7,12 @@ using System.Data.SQLite;
  const int Y_MAX_COL = 8;
 
 Console.WriteLine("Please enter the path of the GKPG to expand:");
-String path1 = Console.ReadLine();
+String basePath = Console.ReadLine();
 Console.WriteLine("Please enter the path of the GKPG to pull data:");
-String path2 = Console.ReadLine();
+String sourcePath = Console.ReadLine();
 Console.WriteLine("proccessing your request...");
-InsertData( ReadData(path2), path1);
-UpdateAxises(path1, path2);
+InsertData( ReadData(sourcePath), basePath);
+UpdateAxises(basePath, sourcePath);
 Console.WriteLine("your request completed succssefully");
 
 static Coordinate AxisEdgeCoordinates(String path, Coordinate.CompareFunc edgeSide)
