@@ -6,20 +6,21 @@ using System.Threading.Tasks;
 
 namespace SQLiteDemo
 {
-    internal class GeoPackage
+    internal class TileInfo
     {
-		public int ZoomLevel { get; }
+		public int ZoomLevel { get; set; }
+
 		public int TileColumn { get; }
 		public int TileRow { get; }
 		public byte[] TileData { get; }
 
-		public GeoPackage(int zoomLevel, int tileColumn, int tileRow, byte[] tileData)
-		{
-			this.ZoomLevel = zoomLevel;
+		public TileInfo(int zoomLevel, int tileColumn, int tileRow, byte[] tileData)
+        {
+            this.ZoomLevel = zoomLevel;
 			this.TileColumn = tileColumn;
 			this.TileRow = tileRow;
 			this.TileData = tileData;
 		}
-		public GeoPackage() { }
+		public TileInfo() { }
 	}
 }
