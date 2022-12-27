@@ -120,12 +120,12 @@ static void InsertTileData(List<TileInfo> data, String gpkgPath, SQLiteConnectio
 
     for (int index = 0; index < data.Count; index++)
     {
-        int zoomLevel = ((TileInfo) data[index]).ZoomLevel,
-            tileColumn = ((TileInfo)data[index]).TileColumn, 
-            tileRow = ((TileInfo)data[index]).TileRow;
-        byte[] tileData = ((TileInfo)data[index]).TileData;
+        int zoomLevel = data[index].ZoomLevel,
+            tileColumn = data[index].TileColumn, 
+            tileRow = data[index].TileRow;
+        byte[] tileData = data[index].TileData;
         String tableName = ReadTableName(gpkgPath, conn);
-        String query = $"INSERT or REPLACE INTO {tableName}( zoom_level, tile_column, tile_row, tile_data)" + " VALUES( @zoomLevel, @tileColumn, @tileRow, @tileData)";
+        String query = $"INSERT or REPLACE INTO {tableName}( zoom_level, tile_column, tile_row, tile_data) VALUES( @zoomLevel, @tileColumn, @tileRow, @tileData)";
         command = new SQLiteCommand(query, conn);
         command.Parameters.AddWithValue("@zoomLevel", zoomLevel);
         command.Parameters.AddWithValue("@tileColumn", tileColumn);
@@ -152,19 +152,19 @@ static void InsertTileMatrix(List<TileMatrix> data, String gpkgPath, SQLiteConne
 
     for (int index = 0; index < data.Count; index++)
     {
-        int zoomLevel = ((TileMatrix)data[index]).ZoomLevel;
+        int zoomLevel = data[index].ZoomLevel;
         string findZoomLevelQuery = $"SELECT zoom_level FROM gpkg_tile_matrix WHERE zoom_level == {zoomLevel}";
         command = new SQLiteCommand(findZoomLevelQuery, conn);
         Boolean foundZoomLevel = command.ExecuteReader().HasRows;
 
         if (!foundZoomLevel)
         {
-            int MatrixWidth = ((TileMatrix)data[index]).MatrixWidth,
-                MatrixHeight = ((TileMatrix)data[index]).MatrixHeight,
-                TileWidth = ((TileMatrix)data[index]).TileWidth,
-                TileHeight = ((TileMatrix)data[index]).TileHeight;
-            double PixelXSize = ((TileMatrix)data[index]).PixelXSize,
-                PixelYSize = ((TileMatrix)data[index]).PixelYSize;
+            int MatrixWidth = data[index].MatrixWidth,
+                MatrixHeight = data[index].MatrixHeight,
+                TileWidth = data[index].TileWidth,
+                TileHeight = data[index].TileHeight;
+            double PixelXSize = data[index].PixelXSize,
+                PixelYSize = data[index].PixelYSize;
             String query = "INSERT or REPLACE INTO gpkg_tile_matrix(table_name, zoom_level, matrix_width, matrix_height, tile_width, tile_height, pixel_x_size, pixel_y_size) " +
                 $"VALUES( '{tableName}', @zoomLevel, @MatrixWidth, @MatrixHeight, @TileWidth, @TileHeight, @PixelXSize, @PixelYSize)";
             command = new SQLiteCommand(query, conn);
