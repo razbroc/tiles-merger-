@@ -19,7 +19,7 @@ namespace SQLiteDemo
 
         public delegate double CompareFunc(double value1, double value2);
 
-        public static Coordinate CompareCoordinates(Coordinate coordinate1, Coordinate coordinate2, CompareFunc compareValue)
+        public static Coordinate EdgeCoordinatesByEdgeSide(Coordinate coordinate1, Coordinate coordinate2, CompareFunc compareValue)
         {
             double x = compareValue(coordinate2.X, coordinate1.X);
             double y = compareValue(coordinate2.Y, coordinate1.Y);

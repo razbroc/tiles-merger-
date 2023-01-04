@@ -39,7 +39,7 @@ static String ReadTableName(String gpkgPath, SQLiteConnection conn)
     return name;
 }
 
-static Coordinate AxisEdgeType(String path, Edge edgeSide, SQLiteConnection conn)
+static Coordinate CalcAxisEdge(String path, Edge edgeSide, SQLiteConnection conn)
 {
     int xCol;
     int yCol;
@@ -82,11 +82,8 @@ static Coordinate AxisEdgeCoordinates(String path, Coordinate.CompareFunc compar
          * therefore we need to determine whether we are checking for a max/min edge situation - 
          * and find the fitting edge for that situation.
          * */
-        comparedCoordinates = Coordinate.CompareCoordinates(edgeCoordinates, areaCoordinates, compareFunc);
-        if (!Coordinate.Equals(comparedCoordinates, edgeCoordinates))
-            {
-                edgeCoordinates = comparedCoordinates;
-            }
+        comparedCoordinates = Coordinate.EdgeCoordinatesByEdgeSide(edgeCoordinates, areaCoordinates, compareFunc);
+        edgeCoordinates = comparedCoordinates;
     }
 
     return edgeCoordinates;
@@ -95,13 +92,13 @@ static Coordinate AxisEdgeCoordinates(String path, Coordinate.CompareFunc compar
 static void UpdateExtent(String basePath, String sourcePath, SQLiteConnection connectionToBaseGKPG)
 {
 
-    Coordinate baseMinCoordinates = AxisEdgeType(basePath, Edge.Min, connectionToBaseGKPG);
-    Coordinate sourceMinCoordinates = AxisEdgeType(sourcePath, Edge.Min, connectionToBaseGKPG);
-    Coordinate baseMaxCoordinates = AxisEdgeType(basePath, Edge.Max, connectionToBaseGKPG);
-    Coordinate sourceMaxCoordinates = AxisEdgeType(sourcePath, Edge.Max, connectionToBaseGKPG);
+    Coordinate area1MinCoordinates = CalcAxisEdge(basePath, Edge.Min, connectionToBaseGKPG);
+    Coordinate area2MinCoordinates = CalcAxisEdge(sourcePath, Edge.Min, connectionToBaseGKPG);
+    Coordinate area1MaxCoordinates = CalcAxisEdge(basePath, Edge.Max, connectionToBaseGKPG);
+    Coordinate area2MaxCoordinates = CalcAxisEdge(sourcePath, Edge.Max, connectionToBaseGKPG);
 
-    Coordinate minCoordinates = Coordinate.CompareCoordinates(baseMinCoordinates, sourceMinCoordinates, Math.Min);
-    Coordinate maxCoordinates = Coordinate.CompareCoordinates(baseMaxCoordinates, sourceMaxCoordinates, Math.Max);
+    Coordinate minCoordinates = Coordinate.EdgeCoordinatesByEdgeSide(area1MinCoordinates, area2MinCoordinates, Math.Min);
+    Coordinate maxCoordinates = Coordinate.EdgeCoordinatesByEdgeSide(area1MaxCoordinates, area2MaxCoordinates, Math.Max);
 
     String query = "UPDATE gpkg_contents SET min_x = @param1, min_y = @param2, max_x = @param3, max_y = @param4 ;";
     SQLiteCommand commandArea1 = new SQLiteCommand(query, connectionToBaseGKPG);
