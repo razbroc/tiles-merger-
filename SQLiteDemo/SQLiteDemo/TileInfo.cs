@@ -9,7 +9,6 @@ namespace SQLiteDemo
     internal class TileInfo
     {
 		public int ZoomLevel { get; set; }
-
 		public int TileColumn { get; }
 		public int TileRow { get; }
 		public byte[] TileData { get; }

@@ -21,10 +21,10 @@ namespace SQLiteDemo
 
         public static Coordinate CompareCoordinates(Coordinate coordinate1, Coordinate coordinate2, CompareFunc compareValue)
         {
-            double X = compareValue(coordinate2.X, coordinate1.X);
+            double x = compareValue(coordinate2.X, coordinate1.X);
             double y = compareValue(coordinate2.Y, coordinate1.Y);
 
-            return new Coordinate(X, y);
+            return new Coordinate(x, y);
         }
 
         public override bool Equals(object? obj)
