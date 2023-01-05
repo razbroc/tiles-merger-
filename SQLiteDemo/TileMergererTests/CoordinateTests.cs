@@ -5,7 +5,7 @@ namespace TileMergererTests
     public class CoordinateTests
     {
         [TestMethod]
-        public void MaxEdgeBothValuesLowerThanOtherCoordinate(CompareFunc math)
+        public void MaxEdgeBothValuesLowerThanOtherCoordinate()
         {
             double x1 = 2.1;
             double y1 = 2.2;
@@ -14,7 +14,7 @@ namespace TileMergererTests
 
             Coordinate c1 = new Coordinate(x1, y1);
             Coordinate predicted = new Coordinate(x2, y2);
-            Coordinate actual = Cooredinate.EdgeCoordinatesByEdgeSide(c1, predicted, math);
+            Coordinate actual = Cooredinate.EdgeCoordinatesByEdgeSide(c1, predicted, Math.Max);
 
             Assert.AreEqual(predicted, actual);
         }
