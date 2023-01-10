@@ -5,7 +5,7 @@ using System.Data.SQLite;
 namespace ProgramTests
 {
     [TestClass]
-    public class ProgramTests
+    public class DBTests
     {
         #region mocks
 
@@ -27,9 +27,10 @@ namespace ProgramTests
             SQLiteDataReaderMock.Setup(x => x.GetDouble(It.IsAny<int>())).Returns(r.NextDouble() * range);
             SQLiteDataReaderMock.Setup(x => x.GetInt32(It.IsAny<int>())).Returns(r.Next(1, range));
             SQLiteDataReaderMock.Setup(x => x.GetValue(It.IsAny<int>())).Returns(byteArr);
-            SQLiteConnection stubConn = new SQLiteConnection;
+            SQLiteConnection stubConn = new SQLiteConnection();
+
             // ACT
-            DbQueries.AxisEdgeCoordinates("stub", Math.Max, 0, 0, stubConn);
+            Coordinate actualCoordinate = DbQueries.AxisEdgeCoordinates("stub", Math.Max, 0, 0, stubConn);
 
             // ASSERT
         }
