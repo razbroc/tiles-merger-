@@ -69,7 +69,12 @@ static Coordinate AxisEdgeCoordinates(String path, Coordinate.CompareFunc compar
     Coordinate areaCoordinates = null;
     Coordinate edgeCoordinates = null;
     Coordinate comparedCoordinates = null;
-    dataReader.Read();
+    try {
+        dataReader.Read();
+    }
+    catch (Exception ex) {
+        throw ex;
+    }
     edgeCoordinates = new Coordinate(dataReader.GetDouble(xCol), dataReader.GetDouble(yCol));
 
     while (dataReader.Read())

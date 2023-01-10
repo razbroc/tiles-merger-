@@ -1,4 +1,6 @@
-using SQLiteDemo.Coordinate;
+using SQLiteDemo;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 namespace TileMergererTests
 {
     [TestClass]
@@ -14,7 +16,7 @@ namespace TileMergererTests
 
             Coordinate c1 = new Coordinate(x1, y1);
             Coordinate predicted = new Coordinate(x2, y2);
-            Coordinate actual = Cooredinate.EdgeCoordinatesByEdgeSide(c1, predicted, Math.Max);
+            Coordinate actual = Coordinate.EdgeCoordinatesByEdgeSide(c1, predicted, Math.Max);
 
             Assert.AreEqual(predicted, actual);
         }
@@ -30,7 +32,7 @@ namespace TileMergererTests
             Coordinate c2 = new Coordinate(x2, y2);
             
             Coordinate predicted = new Coordinate(x2,y1);
-            Coordinate actual = Cooredinate.EdgeCoordinatesByEdgeSide(c1, c2, Math.Max);
+            Coordinate actual = Coordinate.EdgeCoordinatesByEdgeSide(c1, c2, Math.Max);
 
             Assert.AreEqual(predicted, actual);
         }
@@ -46,7 +48,7 @@ namespace TileMergererTests
             Coordinate c2 = new Coordinate(x2, y2);
             
             Coordinate predicted = new Coordinate(x1,y1);
-            Coordinate actual = Cooredinate.EdgeCoordinatesByEdgeSide(c1, c2, Math.Max);
+            Coordinate actual = Coordinate.EdgeCoordinatesByEdgeSide(c1, c2, Math.Max);
 
             Assert.AreEqual(predicted, actual);
         }
@@ -60,7 +62,7 @@ namespace TileMergererTests
 
             Coordinate predicted = new Coordinate(x1, y1);
             Coordinate c2 = new Coordinate(x2, y2);
-            Coordinate actual = Cooredinate.EdgeCoordinatesByEdgeSide(c2, predicted, Math.Max);
+            Coordinate actual = Coordinate.EdgeCoordinatesByEdgeSide(c2, predicted, Math.Max);
 
             Assert.AreEqual(predicted, actual);
         }
@@ -76,7 +78,7 @@ namespace TileMergererTests
             Coordinate c2 = new Coordinate(x2, y2);
             
             Coordinate predicted = new Coordinate(x1,y2);
-            Coordinate actual = Cooredinate.EdgeCoordinatesByEdgeSide(c1, c2, Math.Max);
+            Coordinate actual = Coordinate.EdgeCoordinatesByEdgeSide(c1, c2, Math.Max);
 
             Assert.AreEqual(predicted, actual);
         }
@@ -92,7 +94,7 @@ namespace TileMergererTests
             Coordinate c2 = new Coordinate(x2, y2);
             
             Coordinate predicted = new Coordinate(x1,y1);
-            Coordinate actual = Cooredinate.EdgeCoordinatesByEdgeSide(c1, c2, Math.Max);
+            Coordinate actual = Coordinate.EdgeCoordinatesByEdgeSide(c1, c2, Math.Max);
 
             Assert.AreEqual(predicted, actual);
         }
@@ -108,7 +110,7 @@ namespace TileMergererTests
             Coordinate c2 = new Coordinate(x2, y2);
             
             Coordinate predicted = new Coordinate(x2,y2);
-            Coordinate actual = Cooredinate.EdgeCoordinatesByEdgeSide(c1, c2, Math.Max);
+            Coordinate actual = Coordinate.EdgeCoordinatesByEdgeSide(c1, c2, Math.Max);
 
             Assert.AreEqual(predicted, actual);
         }
@@ -124,7 +126,7 @@ namespace TileMergererTests
             Coordinate c2 = new Coordinate(x2, y2);
             
             Coordinate predicted = new Coordinate(x1,y2);
-            Coordinate actual = Cooredinate.EdgeCoordinatesByEdgeSide(c1, c2, Math.Max);
+            Coordinate actual = Coordinate.EdgeCoordinatesByEdgeSide(c1, c2, Math.Max);
 
             Assert.AreEqual(predicted, actual);
         }
@@ -140,7 +142,7 @@ namespace TileMergererTests
 
             Coordinate predicted = new Coordinate(x1, y1);
             Coordinate c2 = new Coordinate(x2, y2);
-            Coordinate actual = Cooredinate.EdgeCoordinatesByEdgeSide(c2, predicted, Math.Min);
+            Coordinate actual = Coordinate.EdgeCoordinatesByEdgeSide(c2, predicted, Math.Min);
 
             Assert.AreEqual(predicted, actual);
         }
@@ -156,7 +158,7 @@ namespace TileMergererTests
             Coordinate c2 = new Coordinate(x2, y2);
             
             Coordinate predicted = new Coordinate(x1,y2);
-            Coordinate actual = Cooredinate.EdgeCoordinatesByEdgeSide(c1, c2, Math.Min);
+            Coordinate actual = Coordinate.EdgeCoordinatesByEdgeSide(c1, c2, Math.Min);
 
             Assert.AreEqual(predicted, actual);
         }
@@ -172,7 +174,7 @@ namespace TileMergererTests
             Coordinate c2 = new Coordinate(x2, y2);
             
             Coordinate predicted = new Coordinate(x2,y1);
-            Coordinate actual = Cooredinate.EdgeCoordinatesByEdgeSide(c1, c2, Math.Min);
+            Coordinate actual = Coordinate.EdgeCoordinatesByEdgeSide(c1, c2, Math.Min);
 
             Assert.AreEqual(predicted, actual);
         }
@@ -186,7 +188,7 @@ namespace TileMergererTests
 
             Coordinate c1 = new Coordinate(x1, y1);
             Coordinate predicted = new Coordinate(x2, y2);
-            Coordinate actual = Cooredinate.EdgeCoordinatesByEdgeSide(c1, predicted, Math.Min);
+            Coordinate actual = Coordinate.EdgeCoordinatesByEdgeSide(c1, predicted, Math.Min);
 
             Assert.AreEqual(predicted, actual);
         }
@@ -202,7 +204,7 @@ namespace TileMergererTests
             Coordinate c2 = new Coordinate(x2, y2);
             
             Coordinate predicted = new Coordinate(x1,y1);
-            Coordinate actual = Cooredinate.EdgeCoordinatesByEdgeSide(c1, c2, Math.Min);
+            Coordinate actual = Coordinate.EdgeCoordinatesByEdgeSide(c1, c2, Math.Min);
 
             Assert.AreEqual(predicted, actual);
         }
@@ -218,7 +220,7 @@ namespace TileMergererTests
             Coordinate c2 = new Coordinate(x2, y2);
             
             Coordinate predicted = new Coordinate(x1,y2);
-            Coordinate actual = Cooredinate.EdgeCoordinatesByEdgeSide(c1, c2, Math.Min);
+            Coordinate actual = Coordinate.EdgeCoordinatesByEdgeSide(c1, c2, Math.Min);
 
             Assert.AreEqual(predicted, actual);
         }
@@ -234,7 +236,7 @@ namespace TileMergererTests
             Coordinate c2 = new Coordinate(x2, y2);
             
             Coordinate predicted = new Coordinate(x1,y2);
-            Coordinate actual = Cooredinate.EdgeCoordinatesByEdgeSide(c1, c2, Math.Min);
+            Coordinate actual = Coordinate.EdgeCoordinatesByEdgeSide(c1, c2, Math.Min);
 
             Assert.AreEqual(predicted, actual);
         }
@@ -250,7 +252,7 @@ namespace TileMergererTests
             Coordinate c2 = new Coordinate(x2, y2);
             
             Coordinate predicted = new Coordinate(x2,y2);
-            Coordinate actual = Cooredinate.EdgeCoordinatesByEdgeSide(c1, c2, Math.Main);
+            Coordinate actual = Coordinate.EdgeCoordinatesByEdgeSide(c1, c2, Math.Main);
 
             Assert.AreEqual(predicted, actual);
         }
