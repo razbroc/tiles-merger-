@@ -1,4 +1,5 @@
 using Moq;
+using SQLiteDemo;
 using System.Data.SQLite;
 
 namespace ProgramTests
@@ -26,9 +27,9 @@ namespace ProgramTests
             SQLiteDataReaderMock.Setup(x => x.GetDouble(It.IsAny<int>())).Returns(r.NextDouble() * range);
             SQLiteDataReaderMock.Setup(x => x.GetInt32(It.IsAny<int>())).Returns(r.Next(1, range));
             SQLiteDataReaderMock.Setup(x => x.GetValue(It.IsAny<int>())).Returns(byteArr);
-
+            SQLiteConnection stubConn = new SQLiteConnection;
             // ACT
-            Program.AxisEdgeCoordinates();
+            DbQueries.AxisEdgeCoordinates("stub", Math.Max, 0, 0, stubConn);
 
             // ASSERT
         }
