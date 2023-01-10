@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SQLiteDemo
 {
-    internal class TileInfo
+    public class TileInfo
     {
 		public int ZoomLevel { get; set; }
 		public int TileColumn { get; }

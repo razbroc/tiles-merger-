@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SQLiteDemo
 {
-    internal class TileMatrix
+    public class TileMatrix
     {
         public int ZoomLevel { get; } 
         public int MatrixWidth { get; }
