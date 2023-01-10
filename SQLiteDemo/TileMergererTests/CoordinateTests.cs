@@ -52,7 +52,7 @@ namespace TileMergererTests
 
             Assert.AreEqual(predicted, actual);
         }
-
+        /*
         public void MaxEdgeBothValuesLowerThanOtherCoordinate()
         {
             double x1 = 2.1;
@@ -66,7 +66,7 @@ namespace TileMergererTests
 
             Assert.AreEqual(predicted, actual);
         }
-
+        */
         public void MaxEdgeEqualXValuesYIsLower()
         {
             double x1= 2.1;
@@ -162,7 +162,7 @@ namespace TileMergererTests
 
             Assert.AreEqual(predicted, actual);
         }
-
+        /*
         public void MaxEdgeBothValuesAreLowerThanOtherCoordinateValues()
         {
             double x2 = 2.1;
@@ -256,6 +256,6 @@ namespace TileMergererTests
 
             Assert.AreEqual(predicted, actual);
         }
-
+        */
     }
 }

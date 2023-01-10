@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32630.192
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SQLiteDemo", "SQLiteDemo\SQLiteDemo.csproj", "{35CBBD51-01E1-4888-BA9E-0E733A19AE37}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SQLiteDemo", "SQLiteDemo\SQLiteDemo.csproj", "{35CBBD51-01E1-4888-BA9E-0E733A19AE37}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DbTests", "ProgramTests\DbTests.csproj", "{D7F50D2A-D533-458D-97C4-CD6295705034}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TileMergererTests", "TileMergererTests\TileMergererTests.csproj", "{30364F83-A1D7-4A05-B5E5-B93EC7AA3382}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{35CBBD51-01E1-4888-BA9E-0E733A19AE37}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{35CBBD51-01E1-4888-BA9E-0E733A19AE37}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{35CBBD51-01E1-4888-BA9E-0E733A19AE37}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D7F50D2A-D533-458D-97C4-CD6295705034}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D7F50D2A-D533-458D-97C4-CD6295705034}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D7F50D2A-D533-458D-97C4-CD6295705034}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D7F50D2A-D533-458D-97C4-CD6295705034}.Release|Any CPU.Build.0 = Release|Any CPU
+		{30364F83-A1D7-4A05-B5E5-B93EC7AA3382}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30364F83-A1D7-4A05-B5E5-B93EC7AA3382}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30364F83-A1D7-4A05-B5E5-B93EC7AA3382}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30364F83-A1D7-4A05-B5E5-B93EC7AA3382}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

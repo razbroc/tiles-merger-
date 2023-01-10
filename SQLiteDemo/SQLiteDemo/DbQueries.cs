@@ -15,7 +15,7 @@ namespace SQLiteDemo
         const int Y_MIN_COL = 6;
         const int X_MAX_COL = 7;
         const int Y_MAX_COL = 8;
-        public String ReadTableName(String gpkgPath, SQLiteConnection conn)
+        static String ReadTableName(String gpkgPath, SQLiteConnection conn)
         {
             String query = "SELECT name FROM sqlite_sequence";
             SQLiteCommand command = new SQLiteCommand(query, conn);
@@ -26,7 +26,7 @@ namespace SQLiteDemo
             return name;
         }
 
-        Coordinate CalcAxisEdge(String path, Edge edgeSide, SQLiteConnection conn)
+        static Coordinate CalcAxisEdge(String path, Edge edgeSide, SQLiteConnection conn)
         {
             int xCol;
             int yCol;
