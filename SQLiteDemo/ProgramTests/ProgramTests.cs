@@ -38,6 +38,7 @@ namespace ProgramTests
         {
             // ARRANGE
             SQLiteDataReaderMock = new Mock<ISqlDataReader>(MockBehavior.Loose);
+            SQLiteCommandMock = new Mock<SQLiteCommand>(MockBehavior.Loose);
             SQLiteDataReaderMock.SetupSequence(x => x.Read()).Returns(true).Returns(true).Returns(false) ;
             SQLiteDataReaderMock.SetupSequence(x => x.GetDouble(It.IsAny<int>())).Returns(new Queue<double>(new[] { 1.35, 1.123, 34.3258795317408, 31.23180570002 }).Dequeue);
 
