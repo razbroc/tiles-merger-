@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SQLiteDemo
 {
-    interface ISqlDataReader 
+    public interface ISqlDataReader 
     {
         Boolean Read();
         double GetDouble(int col);
