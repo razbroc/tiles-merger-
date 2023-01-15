@@ -20,7 +20,7 @@ namespace ProgramTests
         #region mocks
 
         private Mock<SQLiteConnection> SQLiteConnectionMock;
-        private Mock<SQLiteCommand> SQLiteCommandMock;
+        private Mock<ISqliteCommand> SQLiteCommandMock;
         private Mock<ISqlDataReader> SQLiteDataReaderMock;
         /*
          * Random r = new Random();
@@ -38,7 +38,7 @@ namespace ProgramTests
         {
             // ARRANGE
             SQLiteDataReaderMock = new Mock<ISqlDataReader>(MockBehavior.Loose);
-            SQLiteCommandMock = new Mock<SQLiteCommand>(MockBehavior.Loose);
+            SQLiteCommandMock = new Mock<ISqliteCommand>(MockBehavior.Loose);
             SQLiteDataReaderMock.SetupSequence(x => x.Read()).Returns(true).Returns(true).Returns(false) ;
             SQLiteDataReaderMock.SetupSequence(x => x.GetDouble(It.IsAny<int>())).Returns(new Queue<double>(new[] { 1.35, 1.123, 34.3258795317408, 31.23180570002 }).Dequeue);
 
