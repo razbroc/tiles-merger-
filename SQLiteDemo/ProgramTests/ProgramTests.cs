@@ -1,6 +1,7 @@
 using Moq;
 using SQLiteDemo;
 using System.Data;
+using System.Data.Common;
 using System.Data.SQLite;
 
 namespace ProgramTests
@@ -34,24 +35,21 @@ namespace ProgramTests
 
 
         #endregion
-        private string GetGpkgPath()
-        {
-            //create "path" that manipulates sqlite connection string to use shared in memory db.
-            //guid (uuid)  is used to make the db unique per test - this is required when running multiple tests in parallel
-            return $"{Guid.NewGuid():N};Mode=Memory;Cache=Shared";
-        }
+
 
         [TestMethod]
         public void AxisEdgeCoordinategffgs()
         {
             // ARRANGE
-            SQLiteConnection conn = new SQLiteConnection($"Data Source={GetGpkgPath()}");
-            conn.Open();
-            var readerMock = new SQLiteCommand("", conn);
+            SQLiteConnection fakeConnection = new SQLiteConnection($"Data Source={GetGpkgPath()}");
+            fakeConnection.Open();
+            var commanandOnFakeDB = new SQLiteCommand("", fakeConnection);
             ISQLiteDataReaderMock = new Mock<ISqlDataReader>(MockBehavior.Loose);
             ISQLiteCommandMock = new Mock<ISqliteCommand>();
             ISQLiteDataReaderMock.SetupSequence(x => x.Read()).Returns(true).Returns(true).Returns(false) ;
-            ISQLiteCommandMock.Setup(x => x.ExecuteReader()).Returns(readerMock.ExecuteReader());
+            SQLiteDataReader fakeReader = commanandOnFakeDB.ExecuteReader();
+            DbDataReader ds = new DbDataReader();
+            ISQLiteCommandMock.Setup(x => x.ExecuteReader()).Returns(ds);
             ISQLiteDataReaderMock.SetupSequence(x => x.GetDouble(It.IsAny<int>())).Returns(new Queue<double>(new[] { 1.35, 1.123, 34.3258795317408, 31.23180570002 }).Dequeue);
 
             SQLiteConnection stubConn = new SQLiteConnection();
