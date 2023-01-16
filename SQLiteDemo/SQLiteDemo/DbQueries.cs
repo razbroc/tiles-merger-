@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Data.Sqlite;
+using System.Diagnostics;
 
 namespace SQLiteDemo
 {
@@ -58,6 +59,7 @@ namespace SQLiteDemo
             Coordinate comparedCoordinates = null;
             dataReader.Read();
             edgeCoordinates = new Coordinate(dataReader.GetDouble(xCol), dataReader.GetDouble(yCol));
+            Debug.WriteLine("Time {0}", DateTime.Now);
 
             while (dataReader.Read())
             {

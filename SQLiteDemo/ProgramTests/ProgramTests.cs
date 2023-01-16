@@ -1,5 +1,6 @@
 using Moq;
 using SQLiteDemo;
+using System.Data;
 using System.Data.SQLite;
 
 namespace ProgramTests
@@ -20,8 +21,9 @@ namespace ProgramTests
         #region mocks
 
         private Mock<SQLiteConnection> SQLiteConnectionMock;
-        private Mock<ISqliteCommand> SQLiteCommandMock;
-        private Mock<ISqlDataReader> SQLiteDataReaderMock;
+        private Mock<ISqliteCommand> ISQLiteCommandMock;
+        private Mock<SqliteCommandWrapper> sqliteCommandWrapper;
+        private Mock<ISqlDataReader> ISQLiteDataReaderMock;
         /*
          * Random r = new Random();
             int range = 9;
@@ -32,15 +34,25 @@ namespace ProgramTests
 
 
         #endregion
+        private string GetGpkgPath()
+        {
+            //create "path" that manipulates sqlite connection string to use shared in memory db.
+            //guid (uuid)  is used to make the db unique per test - this is required when running multiple tests in parallel
+            return $"{Guid.NewGuid():N};Mode=Memory;Cache=Shared";
+        }
 
         [TestMethod]
         public void AxisEdgeCoordinategffgs()
         {
             // ARRANGE
-            SQLiteDataReaderMock = new Mock<ISqlDataReader>(MockBehavior.Loose);
-            SQLiteCommandMock = new Mock<ISqliteCommand>(MockBehavior.Loose);
-            SQLiteDataReaderMock.SetupSequence(x => x.Read()).Returns(true).Returns(true).Returns(false) ;
-            SQLiteDataReaderMock.SetupSequence(x => x.GetDouble(It.IsAny<int>())).Returns(new Queue<double>(new[] { 1.35, 1.123, 34.3258795317408, 31.23180570002 }).Dequeue);
+            SQLiteConnection conn = new SQLiteConnection($"Data Source={GetGpkgPath()}");
+            conn.Open();
+            var readerMock = new SQLiteCommand("", conn);
+            ISQLiteDataReaderMock = new Mock<ISqlDataReader>(MockBehavior.Loose);
+            ISQLiteCommandMock = new Mock<ISqliteCommand>();
+            ISQLiteDataReaderMock.SetupSequence(x => x.Read()).Returns(true).Returns(true).Returns(false) ;
+            ISQLiteCommandMock.Setup(x => x.ExecuteReader()).Returns(readerMock.ExecuteReader());
+            ISQLiteDataReaderMock.SetupSequence(x => x.GetDouble(It.IsAny<int>())).Returns(new Queue<double>(new[] { 1.35, 1.123, 34.3258795317408, 31.23180570002 }).Dequeue);
 
             SQLiteConnection stubConn = new SQLiteConnection();
             Coordinate Expected = new Coordinate(34.3258795317408, 31.23180570002);

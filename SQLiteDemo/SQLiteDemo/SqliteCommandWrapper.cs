@@ -7,9 +7,13 @@ using System.Threading.Tasks;
 
 namespace SQLiteDemo
 {
-    internal class SqliteCommandWrapper : ISqliteCommand
+    public class SqliteCommandWrapper : ISqliteCommand
     {
         private readonly SQLiteCommand sqliteCommand;
+
+        public SqliteCommandWrapper()
+        {
+        }
 
         public SqliteCommandWrapper(SQLiteCommand sqliteCommand)
         {
@@ -19,7 +23,6 @@ namespace SQLiteDemo
         public SQLiteDataReader ExecuteReader()
         {
             return this.sqliteCommand.ExecuteReader();
-            throw new NotImplementedException();
         }
     }
 }

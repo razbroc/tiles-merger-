@@ -11,6 +11,7 @@ namespace SQLiteDemo
     {
         private readonly SqlDataReader sqlDataReader;
 
+
         public DataReaderWrapper(SqlDataReader sqlDataReader)
         {
             this.sqlDataReader = sqlDataReader;
