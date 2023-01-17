@@ -7,18 +7,18 @@ using System.Threading.Tasks;
 
 namespace DbTests
 {
-    internal class InMemoryDBTemplate
+    public abstract class InMemoryDBTemplate
     {
         public const int SRID = 4326;
 
-        private string GetGpkgPath()
+        public static string GetGpkgPath()
         {
             //create "path" that manipulates sqlite connection string to use shared in memory db.
             //guid (uuid)  is used to make the db unique per test - this is required when running multiple tests in parallel
             return $"{Guid.NewGuid():N};Mode=Memory;Cache=Shared";
         }
 
-        private void SetPragma(SQLiteConnection connection)
+        private static void SetPragma(SQLiteConnection connection)
         {
             using (var command = connection.CreateCommand())
             {
@@ -29,7 +29,7 @@ namespace DbTests
                 command.ExecuteNonQuery();
             }
         }
-        private void CreateSpatialRefTable(SQLiteConnection connection)
+        private static void CreateSpatialRefTable(SQLiteConnection connection)
         {
             using (var command = connection.CreateCommand())
             {
@@ -56,7 +56,7 @@ namespace DbTests
             }
         }
 
-        private void CreateContentsTable(SQLiteConnection connection)
+        private static void CreateContentsTable(SQLiteConnection connection)
         {
             using (var command = connection.CreateCommand())
             {
@@ -77,7 +77,7 @@ namespace DbTests
             }
         }
 
-        private void CreateGeometryColumnsTable(SQLiteConnection connection)
+        private static void CreateGeometryColumnsTable(SQLiteConnection connection)
         {
             using (var command = connection.CreateCommand())
             {
@@ -95,7 +95,7 @@ namespace DbTests
             }
         }
 
-        private void CreateTileMatrixSetTable(SQLiteConnection connection)
+        private static void CreateTileMatrixSetTable(SQLiteConnection connection)
         {
             using (var command = connection.CreateCommand())
             {
@@ -113,7 +113,7 @@ namespace DbTests
             }
         }
 
-        private void CreateTileMatrixTable(SQLiteConnection connection)
+        private static void CreateTileMatrixTable(SQLiteConnection connection)
         {
             using (var command = connection.CreateCommand())
             {
@@ -132,7 +132,7 @@ namespace DbTests
             }
         }
 
-        private void CreateExtentionTable(SQLiteConnection connection)
+        private static void CreateExtentionTable(SQLiteConnection connection)
         {
             using (var command = connection.CreateCommand())
             {
@@ -147,7 +147,7 @@ namespace DbTests
             }
         }
 
-        private void CreateTileTable(SQLiteConnection connection, string tileCache)
+        private static void CreateTileTable(SQLiteConnection connection, string tileCache)
         {
             using (var command = connection.CreateCommand())
             {
@@ -163,7 +163,7 @@ namespace DbTests
             }
         }
 
-        private void Add2X1MatrixSet(SQLiteConnection connection, string tileCache)
+        private static void Add2X1MatrixSet(SQLiteConnection connection, string tileCache)
         {
             using (var command = connection.CreateCommand())
             {
@@ -173,18 +173,19 @@ namespace DbTests
             }
         }
 
-        private void CreateGpkgContentsTable(SQLiteConnection connection, Extent extent, string tileCache)
-        {
-            using (var command = connection.CreateCommand())
-            {
-                command.CommandText = "INSERT INTO \"gpkg_contents\" " +
-                                      "(\"table_name\",\"data_type\",\"identifier\",\"min_x\",\"min_y\",\"max_x\",\"max_y\",\"srs_id\") VALUES " +
-                                      $"('{tileCache}','tiles','{tileCache}',{extent.MinX},{extent.MinY},{extent.MaxX},{extent.MaxY},{SRID});";
-                command.ExecuteNonQuery();
-            }
-        }
 
-        private void CreateTileMatrixValidationTriggers(SQLiteConnection connection)
+        //private void InitGpkgContentsTable(SQLiteConnection connection, Extent extent, string tileCache)
+        //{
+        //    using (var command = connection.CreateCommand())
+        //    {
+        //        command.CommandText = "INSERT INTO \"gpkg_contents\" " +
+        //                              "(\"table_name\",\"data_type\",\"identifier\",\"min_x\",\"min_y\",\"max_x\",\"max_y\",\"srs_id\") VALUES " +
+        //                              $"('{tileCache}','tiles','{tileCache}',{extent.MinX},{extent.MinY},{extent.MaxX},{extent.MaxY},{SRID});";
+        //        command.ExecuteNonQuery();
+        //    }
+        //}
+
+        private static void CreateTileMatrixValidationTriggers(SQLiteConnection connection)
         {
             using (var command = connection.CreateCommand())
             {
@@ -203,7 +204,7 @@ namespace DbTests
             }
         }
 
-        private string InternalGetTileCache(string path)
+        private static string InternalGetTileCache(string path)
         {
             string tileCache = "";
 
@@ -226,27 +227,26 @@ namespace DbTests
             return tileCache;
         }
 
-        public void Create(Extent extent)
+        public static void Create(string path)
         {
-            String path = GetGpkgPath();
-            String cache = InternalGetTileCache(path);
-            SQLiteConnection.CreateFile(path);
+            String cache = "mytable";
+            SQLiteConnection.CreateFile("fakeDb");
             using (var connection = new SQLiteConnection($"Data Source={path}"))
             {
                 connection.Open();
                 using (var transaction = connection.BeginTransaction())
                 {
-                    this.SetPragma(connection);
-                    this.CreateSpatialRefTable(connection);
-                    this.CreateContentsTable(connection);
-                    this.CreateGeometryColumnsTable(connection);
-                    this.CreateTileMatrixSetTable(connection);
-                    this.CreateTileMatrixTable(connection);
-                    this.CreateExtentionTable(connection);
-                    this.CreateTileTable(connection, cache);
-                    this.Add2X1MatrixSet(connection, cache);
-                    this.CreateGpkgContentsTable(connection, extent, cache);
-                    this.CreateTileMatrixValidationTriggers(connection);
+                    SetPragma(connection);
+                    CreateSpatialRefTable(connection);
+                    CreateContentsTable(connection);
+                    CreateGeometryColumnsTable(connection);
+                    CreateTileMatrixSetTable(connection);
+                    CreateTileMatrixTable(connection);
+                    CreateExtentionTable(connection);
+                    CreateTileTable(connection, cache);
+                    Add2X1MatrixSet(connection, cache);
+                    //this.InitGpkgContentsTable(connection, extent, cache);
+                    CreateTileMatrixValidationTriggers(connection);
                     transaction.Commit();
                 }
             }

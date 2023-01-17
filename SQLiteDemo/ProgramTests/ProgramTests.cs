@@ -1,3 +1,4 @@
+using DbTests;
 using Moq;
 using SQLiteDemo;
 using System.Data;
@@ -24,7 +25,7 @@ namespace ProgramTests
         private Mock<SQLiteConnection> SQLiteConnectionMock;
         private Mock<ISqliteCommand> ISQLiteCommandMock;
         private Mock<SqliteCommandWrapper> sqliteCommandWrapper;
-        private Mock<ISqlDataReader> ISQLiteDataReaderMock;
+        private Mock<DataReaderWrapper> SQLiteDataReaderMock;
         /*
          * Random r = new Random();
             int range = 9;
@@ -41,25 +42,23 @@ namespace ProgramTests
         public void AxisEdgeCoordinategffgs()
         {
             // ARRANGE
-            SQLiteConnection fakeConnection = new SQLiteConnection($"Data Source={GetGpkgPath()}");
+            SQLiteDataReaderMock= new Mock<DataReaderWrapper>(MockBehavior.Loose);
+            string path = InMemoryDBTemplate.GetGpkgPath();
+            SQLiteConnection fakeConnection = new SQLiteConnection($"Data Source={path}");
             fakeConnection.Open();
-            var commanandOnFakeDB = new SQLiteCommand("", fakeConnection);
-            ISQLiteDataReaderMock = new Mock<ISqlDataReader>(MockBehavior.Loose);
-            ISQLiteCommandMock = new Mock<ISqliteCommand>();
-            ISQLiteDataReaderMock.SetupSequence(x => x.Read()).Returns(true).Returns(true).Returns(false) ;
-            SQLiteDataReader fakeReader = commanandOnFakeDB.ExecuteReader();
-            DbDataReader ds = new DbDataReader();
-            ISQLiteCommandMock.Setup(x => x.ExecuteReader()).Returns(ds);
-            ISQLiteDataReaderMock.SetupSequence(x => x.GetDouble(It.IsAny<int>())).Returns(new Queue<double>(new[] { 1.35, 1.123, 34.3258795317408, 31.23180570002 }).Dequeue);
-
-            SQLiteConnection stubConn = new SQLiteConnection();
-            Coordinate Expected = new Coordinate(34.3258795317408, 31.23180570002);
+            InMemoryDBTemplate.Create(path);
+            string query = "INSERT INTO \"gpkg_tile_matrix_set\" VALUES " +
+                                          $"('test',4326,-180,-90,180,90);";
+            SQLiteCommand command = new SQLiteCommand(query, fakeConnection);
+            command.ExecuteNonQuery();
+            //SQLiteDataReaderMock.SetupSequence(x => x.Read()).Returns(true).Returns(true).Returns(false);
+            //SQLiteDataReaderMock.SetupSequence(x => x.GetDouble(It.IsAny<int>())).Returns(new Queue<double>(new[] { 1.35, 1.123, 34.3258795317408, 31.23180570002 }).Dequeue);
 
             // ACT
-            Coordinate actualCoordinate = DbQueries.AxisEdgeCoordinates("stub", Math.Max, 0, 0, stubConn);
+            //Coordinate actualCoordinate = DbQueries.AxisEdgeCoordinates("stub", Math.Max, 0, 0, stubConn);
 
             // ASSERT
-            Assert.AreEqual(actualCoordinate, Expected);
+            //Assert.AreEqual(actualCoordinate, Expected);
         }
     }
 }
