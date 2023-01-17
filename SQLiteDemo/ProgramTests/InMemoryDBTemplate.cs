@@ -9,6 +9,8 @@ namespace DbTests
 {
     internal class InMemoryDBTemplate
     {
+        public const int SRID = 4326;
+
         private string GetGpkgPath()
         {
             //create "path" that manipulates sqlite connection string to use shared in memory db.
@@ -145,11 +147,11 @@ namespace DbTests
             }
         }
 
-        private void CreateTileTable(SQLiteConnection connection)
+        private void CreateTileTable(SQLiteConnection connection, string tileCache)
         {
             using (var command = connection.CreateCommand())
             {
-                command.CommandText = $"CREATE TABLE \"{this._tileCache}\" (" +
+                command.CommandText = $"CREATE TABLE \"{tileCache}\" (" +
                                       "\"id\" INTEGER," +
                                       "\"zoom_level\" INTEGER NOT NULL," +
                                       "\"tile_column\" INTEGER NOT NULL," +
@@ -166,7 +168,7 @@ namespace DbTests
             using (var command = connection.CreateCommand())
             {
                 command.CommandText = "INSERT INTO \"gpkg_tile_matrix_set\" VALUES " +
-                                      $"('{this._tileCache}',{Utils.GeoUtils.SRID},-180,-90,180,90);";
+                                      $"('{tileCache}',{SRID},-180,-90,180,90);";
                 command.ExecuteNonQuery();
             }
         }
@@ -177,7 +179,7 @@ namespace DbTests
             {
                 command.CommandText = "INSERT INTO \"gpkg_contents\" " +
                                       "(\"table_name\",\"data_type\",\"identifier\",\"min_x\",\"min_y\",\"max_x\",\"max_y\",\"srs_id\") VALUES " +
-                                      $"('{tileCache}','tiles','{tileCache}',{extent.MinX},{extent.MinY},{extent.MaxX},{extent.MaxY},{Utils.GeoUtils.SRID});";
+                                      $"('{tileCache}','tiles','{tileCache}',{extent.MinX},{extent.MinY},{extent.MaxX},{extent.MaxY},{SRID});";
                 command.ExecuteNonQuery();
             }
         }
@@ -201,16 +203,11 @@ namespace DbTests
             }
         }
 
-        private string InternalGetTileCache()
+        private string InternalGetTileCache(string path)
         {
-            if (!this.Exist())
-            {
-                return this._fileSystem.Path.GetFileNameWithoutExtension(this.path);
-            }
-
             string tileCache = "";
 
-            using (var connection = new SQLiteConnection($"Data Source={this.path}"))
+            using (var connection = new SQLiteConnection($"Data Source={path}"))
             {
                 connection.Open();
 
@@ -232,6 +229,7 @@ namespace DbTests
         public void Create(Extent extent)
         {
             String path = GetGpkgPath();
+            String cache = InternalGetTileCache(path);
             SQLiteConnection.CreateFile(path);
             using (var connection = new SQLiteConnection($"Data Source={path}"))
             {
@@ -245,9 +243,9 @@ namespace DbTests
                     this.CreateTileMatrixSetTable(connection);
                     this.CreateTileMatrixTable(connection);
                     this.CreateExtentionTable(connection);
-                    this.CreateTileTable(connection);
-                    this.Add2X1MatrixSet(connection);
-                    this.CreateGpkgContentsTable(connection, extent);
+                    this.CreateTileTable(connection, cache);
+                    this.Add2X1MatrixSet(connection, cache);
+                    this.CreateGpkgContentsTable(connection, extent, cache);
                     this.CreateTileMatrixValidationTriggers(connection);
                     transaction.Commit();
                 }
