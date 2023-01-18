@@ -50,9 +50,9 @@ namespace ProgramTests
             SQLiteCommand command = new SQLiteCommand(query, fakeConnection);
             command.ExecuteNonQuery();
             query = "INSERT INTO \"gpkg_contents\" (\"table_name\",\"data_type\",\"min_x\",\"min_y\",\"max_x\",\"max_y\") " +
-                                              "VALUES ('test','tiles',34.2663935002085,31.1786148130457,31.3258795317408,33.23180570002);" +
-                                              "VALUES ('test','tiles',34.2663935002085,31.1786148130457,34.3258795317408,31.23180570002);" +
-                                              "VALUES ('test','tiles',34.2663935002085,31.1786148130457,32.3258795317408,32.23180570002);";
+                                              "VALUES ('test','tiles',34.2663935002085,31.1786148130457,31.3258795317408,33.23180570002)," +
+                                              " ('test1','tiles',34.2663935002085,31.1786148130457,34.3258795317408,31.23180570002)," +
+                                              " ('test2','tiles',34.2663935002085,31.1786148130457,32.3258795317408,32.23180570002);";
             command = new SQLiteCommand(query, fakeConnection);
             command.ExecuteNonQuery();
             Coordinate Expected = new Coordinate(34.3258795317408, 33.23180570002);
