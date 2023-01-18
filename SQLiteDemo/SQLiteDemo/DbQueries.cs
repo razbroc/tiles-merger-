@@ -27,7 +27,7 @@ namespace SQLiteDemo
             return name;
         }
 
-        static Coordinate CalcAxisEdge(String path, Edge edgeSide, SQLiteConnection conn)
+        static Coordinate CalcAxisEdge(Edge edgeSide, SQLiteConnection conn)
         {
             int xCol;
             int yCol;
@@ -46,10 +46,10 @@ namespace SQLiteDemo
                 compareFunc = Math.Min;
             }
 
-            return AxisEdgeCoordinates(path, compareFunc, xCol, yCol, conn);
+            return AxisEdgeCoordinates( compareFunc, xCol, yCol, conn);
         }
 
-        public static Coordinate AxisEdgeCoordinates(String path, Coordinate.CompareFunc compareFunc, int xCol, int yCol, SQLiteConnection connection)
+        public static Coordinate AxisEdgeCoordinates( Coordinate.CompareFunc compareFunc, int xCol, int yCol, SQLiteConnection connection)
         {
             String query = "SELECT * FROM gpkg_contents";
             SQLiteCommand commandArea = new SQLiteCommand(query, connection);
@@ -77,13 +77,13 @@ namespace SQLiteDemo
             return edgeCoordinates;
         }
 
-        public static void UpdateExtent(String basePath, String sourcePath, SQLiteConnection connectionToBaseGKPG)
+        public static void UpdateExtent(SQLiteConnection connectionToBaseGKPG, SQLiteConnection connectionToSourceGKPG)
         {
 
-            Coordinate area1MinCoordinates = CalcAxisEdge(basePath, Edge.Min, connectionToBaseGKPG);
-            Coordinate area2MinCoordinates = CalcAxisEdge(sourcePath, Edge.Min, connectionToBaseGKPG);
-            Coordinate area1MaxCoordinates = CalcAxisEdge(basePath, Edge.Max, connectionToBaseGKPG);
-            Coordinate area2MaxCoordinates = CalcAxisEdge(sourcePath, Edge.Max, connectionToBaseGKPG);
+            Coordinate area1MinCoordinates = CalcAxisEdge(Edge.Min, connectionToBaseGKPG);
+            Coordinate area2MinCoordinates = CalcAxisEdge(Edge.Min, connectionToSourceGKPG);
+            Coordinate area1MaxCoordinates = CalcAxisEdge(Edge.Max, connectionToBaseGKPG);
+            Coordinate area2MaxCoordinates = CalcAxisEdge(Edge.Max, connectionToSourceGKPG);
 
             Coordinate minCoordinates = Coordinate.EdgeCoordinatesByEdgeSide(area1MinCoordinates, area2MinCoordinates, Math.Min);
             Coordinate maxCoordinates = Coordinate.EdgeCoordinatesByEdgeSide(area1MaxCoordinates, area2MaxCoordinates, Math.Max);

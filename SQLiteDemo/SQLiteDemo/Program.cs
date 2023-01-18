@@ -17,7 +17,7 @@ sourceConn.Open();
 Console.WriteLine("proccessing your request...");
 DbQueries.InsertTileMatrix(DbQueries.ReadTileMatrixData(sourcePath,sourceConn),basePath, baseConn);
 DbQueries.InsertTileData(DbQueries.ReadTileData(sourcePath, sourceConn), basePath, baseConn);
-DbQueries.UpdateExtent(basePath, sourcePath, baseConn);
+DbQueries.UpdateExtent(baseConn, sourceConn);
 Console.WriteLine("your request completed succssefully");
 
 baseConn.Close();
