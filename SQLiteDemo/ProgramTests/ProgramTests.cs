@@ -20,18 +20,7 @@ namespace ProgramTests
 
         #region mocks
 
-        private Mock<SQLiteConnection> SQLiteConnectionMock;
-        private Mock<ISqliteCommand> ISQLiteCommandMock;
-        private Mock<SqliteCommandWrapper> sqliteCommandWrapper;
         private Mock<DataReaderWrapper> SQLiteDataReaderMock;
-        /*
-         * Random r = new Random();
-            int range = 9;
-            byte[] byteArr = new byte[] { (byte)r.Next(1, range), (byte)r.Next(1, range), (byte)r.Next(1, range), };
-         *  SQLiteDataReaderMock.Setup(x => x.GetInt32(It.IsAny<int>())).Returns(r.Next(1, range));
-            SQLiteDataReaderMock.Setup(x => x.GetValue(It.IsAny<int>())).Returns(byteArr);
-         */
-
 
         #endregion
 
@@ -56,8 +45,6 @@ namespace ProgramTests
             command = new SQLiteCommand(query, fakeConnection);
             command.ExecuteNonQuery();
             Coordinate Expected = new Coordinate(34.3258795317408, 33.23180570002);
-            //SQLiteDataReaderMock.SetupSequence(x => x.Read()).Returns(true).Returns(true).Returns(false);
-            //SQLiteDataReaderMock.SetupSequence(x => x.GetDouble(It.IsAny<int>())).Returns(new Queue<double>(new[] { 1.35, 1.123, 34.3258795317408, 31.23180570002 }).Dequeue);
 
             // ACT
             Coordinate actualCoordinate = DbQueries.AxisEdgeCoordinates(path, Math.Max, X_MAX_COL, Y_MAX_COL, fakeConnection);
