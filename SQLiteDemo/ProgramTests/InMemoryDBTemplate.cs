@@ -1,4 +1,6 @@
-﻿using System;
+﻿using SQLiteDemo;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Linq;
@@ -225,6 +227,25 @@ namespace DbTests
             }
 
             return tileCache;
+        }
+
+        public static void InsertIntoGpkgContents(SQLiteConnection sqliteConnection, List<TileContent> contentArray)
+        {
+            SQLiteCommand command;
+            foreach (var row in contentArray)
+            {
+                string query = "INSERT INTO \"gpkg_contents\" (\"table_name\",\"data_type\",\"min_x\",\"min_y\",\"max_x\",\"max_y\") " +
+                                      $"VALUES ('{row.tableName}','{row.dataType}',{row.minX},{row.minY},{row.maxX},{row.maxY});";
+                command = new SQLiteCommand(query, sqliteConnection);
+                command.ExecuteNonQuery();
+            }
+        }
+        public static void InsertDefaultIntoTileMatrix(SQLiteConnection sqliteConnection)
+        {
+           string query = "INSERT INTO \"gpkg_tile_matrix_set\" VALUES('test',4326,-180,-90,180,90);";
+           SQLiteCommand command = new SQLiteCommand(query, sqliteConnection);
+           command.ExecuteNonQuery();
+            
         }
 
         public static void Create(string path)
