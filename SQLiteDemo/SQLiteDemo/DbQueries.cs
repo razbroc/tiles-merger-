@@ -16,7 +16,7 @@ namespace SQLiteDemo
         const int Y_MIN_COL = 6;
         const int X_MAX_COL = 7;
         const int Y_MAX_COL = 8;
-        static String ReadTableName(String gpkgPath, SQLiteConnection conn)
+        static String ReadTableName(SQLiteConnection conn)
         {
             String query = "SELECT name FROM sqlite_sequence";
             SQLiteCommand command = new SQLiteCommand(query, conn);
@@ -83,7 +83,7 @@ namespace SQLiteDemo
             Coordinate area1MinCoordinates = CalcAxisEdge(Edge.Min, connectionToBaseGKPG);
             Coordinate area2MinCoordinates = CalcAxisEdge(Edge.Min, connectionToSourceGKPG);
             Coordinate area1MaxCoordinates = CalcAxisEdge(Edge.Max, connectionToBaseGKPG);
-            Coordinate area2MaxCoordinates = CalcAxisEdge(Edge.Max, connectionToSourceGKPG);
+            Coordinate area2MaxCoordinates = CalcAxisEdge(Edge.Max, connectionToBaseGKPG);
 
             Coordinate minCoordinates = Coordinate.EdgeCoordinatesByEdgeSide(area1MinCoordinates, area2MinCoordinates, Math.Min);
             Coordinate maxCoordinates = Coordinate.EdgeCoordinatesByEdgeSide(area1MaxCoordinates, area2MaxCoordinates, Math.Max);
@@ -99,7 +99,7 @@ namespace SQLiteDemo
             commandArea1.ExecuteNonQuery();
         }
 
-        public static void InsertTileData(List<TileInfo> data, String gpkgPath, SQLiteConnection conn)
+        public static void InsertTileData(List<TileInfo> data, SQLiteConnection conn)
         {
             SQLiteCommand command;
 
@@ -109,7 +109,7 @@ namespace SQLiteDemo
                     tileColumn = data[index].TileColumn,
                     tileRow = data[index].TileRow;
                 byte[] tileData = data[index].TileData;
-                String tableName = ReadTableName(gpkgPath, conn);
+                String tableName = ReadTableName(conn);
                 String query = $"INSERT or REPLACE INTO {tableName}( zoom_level, tile_column, tile_row, tile_data) VALUES( @zoomLevel, @tileColumn, @tileRow, @tileData)";
                 command = new SQLiteCommand(query, conn);
                 command.Parameters.AddWithValue("@zoomLevel", zoomLevel);
@@ -130,10 +130,10 @@ namespace SQLiteDemo
             }
         }
 
-        public static void InsertTileMatrix(List<TileMatrix> data, String gpkgPath, SQLiteConnection conn)
+        public static void InsertTileMatrix(List<TileMatrix> data, SQLiteConnection conn)
         {
             SQLiteCommand command;
-            String tableName = ReadTableName(gpkgPath, conn);
+            String tableName = ReadTableName(conn);
 
             for (int index = 0; index < data.Count; index++)
             {
@@ -175,10 +175,10 @@ namespace SQLiteDemo
             }
         }
 
-        public static List<TileInfo> ReadTileData(String gpkgPath, SQLiteConnection conn)
+        public static List<TileInfo> ReadTileData(SQLiteConnection conn)
         {
             SQLiteDataReader dataReader;
-            String tableName = ReadTableName(gpkgPath, conn);
+            String tableName = ReadTableName(conn);
             String query = $"SELECT * FROM {tableName}";
             SQLiteCommand command = new SQLiteCommand(query, conn);
             List<TileInfo> tiles = new List<TileInfo>();
@@ -204,7 +204,7 @@ namespace SQLiteDemo
             return tiles;
         }
 
-        public static List<TileMatrix> ReadTileMatrixData(String gpkgPath, SQLiteConnection conn)
+        public static List<TileMatrix> ReadTileMatrixData(SQLiteConnection conn)
         {
             SQLiteDataReader dataReader;
             String query = "SELECT * FROM gpkg_tile_matrix";

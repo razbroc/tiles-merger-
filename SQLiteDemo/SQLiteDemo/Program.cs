@@ -15,8 +15,8 @@ SQLiteConnection sourceConn = new SQLiteConnection($"Data Source={sourcePath}");
 sourceConn.Open();
 
 Console.WriteLine("proccessing your request...");
-DbQueries.InsertTileMatrix(DbQueries.ReadTileMatrixData(sourcePath,sourceConn),basePath, baseConn);
-DbQueries.InsertTileData(DbQueries.ReadTileData(sourcePath, sourceConn), basePath, baseConn);
+DbQueries.InsertTileMatrix(DbQueries.ReadTileMatrixData(sourceConn), baseConn);
+DbQueries.InsertTileData(DbQueries.ReadTileData(sourceConn), baseConn);
 DbQueries.UpdateExtent(baseConn, sourceConn);
 Console.WriteLine("your request completed succssefully");
 
