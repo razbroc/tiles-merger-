@@ -130,29 +130,29 @@ namespace SQLiteDemo
             }
         }
 
-        public static void InsertTileMatrix(List<TileMatrix> data, SQLiteConnection conn)
+        public static void InsertTileMatrix(List<TileMatrix> sourceTileMatrixData, SQLiteConnection baseConnnection)
         {
             SQLiteCommand command;
-            String tableName = ReadTableName(conn);
+            String tableName = ReadTableName(baseConnnection);
 
-            for (int index = 0; index < data.Count; index++)
+            for (int index = 0; index < sourceTileMatrixData.Count; index++)
             {
-                int zoomLevel = data[index].ZoomLevel;
+                int zoomLevel = sourceTileMatrixData[index].ZoomLevel;
                 string findZoomLevelQuery = $"SELECT zoom_level FROM gpkg_tile_matrix WHERE zoom_level == {zoomLevel}";
-                command = new SQLiteCommand(findZoomLevelQuery, conn);
+                command = new SQLiteCommand(findZoomLevelQuery, baseConnnection);
                 Boolean foundZoomLevel = command.ExecuteReader().HasRows;
 
                 if (!foundZoomLevel)
                 {
-                    int MatrixWidth = data[index].MatrixWidth,
-                        MatrixHeight = data[index].MatrixHeight,
-                        TileWidth = data[index].TileWidth,
-                        TileHeight = data[index].TileHeight;
-                    double PixelXSize = data[index].PixelXSize,
-                        PixelYSize = data[index].PixelYSize;
+                    int MatrixWidth = sourceTileMatrixData[index].MatrixWidth,
+                        MatrixHeight = sourceTileMatrixData[index].MatrixHeight,
+                        TileWidth = sourceTileMatrixData[index].TileWidth,
+                        TileHeight = sourceTileMatrixData[index].TileHeight;
+                    double PixelXSize = sourceTileMatrixData[index].PixelXSize,
+                        PixelYSize = sourceTileMatrixData[index].PixelYSize;
                     String query = "INSERT or REPLACE INTO gpkg_tile_matrix(table_name, zoom_level, matrix_width, matrix_height, tile_width, tile_height, pixel_x_size, pixel_y_size) " +
                         $"VALUES( '{tableName}', @zoomLevel, @MatrixWidth, @MatrixHeight, @TileWidth, @TileHeight, @PixelXSize, @PixelYSize)";
-                    command = new SQLiteCommand(query, conn);
+                    command = new SQLiteCommand(query, baseConnnection);
                     command.Parameters.AddWithValue("@zoomLevel", zoomLevel);
                     command.Parameters.AddWithValue("@MatrixWidth", MatrixWidth);
                     command.Parameters.AddWithValue("@MatrixHeight", MatrixHeight);
@@ -231,11 +231,5 @@ namespace SQLiteDemo
 
             return tileMatrices;
         }
-        enum Edge
-        {
-            Max,
-            Min
-        }
-
     }
 }

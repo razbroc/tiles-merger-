@@ -175,18 +175,6 @@ namespace DbTests
             }
         }
 
-
-        //private void InitGpkgContentsTable(SQLiteConnection connection, Extent extent, string tileCache)
-        //{
-        //    using (var command = connection.CreateCommand())
-        //    {
-        //        command.CommandText = "INSERT INTO \"gpkg_contents\" " +
-        //                              "(\"table_name\",\"data_type\",\"identifier\",\"min_x\",\"min_y\",\"max_x\",\"max_y\",\"srs_id\") VALUES " +
-        //                              $"('{tileCache}','tiles','{tileCache}',{extent.MinX},{extent.MinY},{extent.MaxX},{extent.MaxY},{SRID});";
-        //        command.ExecuteNonQuery();
-        //    }
-        //}
-
         private static void CreateTileMatrixValidationTriggers(SQLiteConnection connection)
         {
             using (var command = connection.CreateCommand())
@@ -266,7 +254,6 @@ namespace DbTests
                     CreateExtentionTable(connection);
                     CreateTileTable(connection, cache);
                     Add2X1MatrixSet(connection, cache);
-                    //this.InitGpkgContentsTable(connection, extent, cache);
                     CreateTileMatrixValidationTriggers(connection);
                     transaction.Commit();
                 }

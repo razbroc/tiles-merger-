@@ -15,12 +15,12 @@ SQLiteConnection sourceConn = new SQLiteConnection($"Data Source={sourcePath}");
 sourceConn.Open();
 
 Console.WriteLine("proccessing your request...");
-DbQueries.InsertTileMatrix(DbQueries.ReadTileMatrixData(sourceConn), baseConn);
-DbQueries.InsertTileData(DbQueries.ReadTileData(sourceConn), baseConn);
+List<TileMatrix> sourceTileMatrixData = DbQueries.ReadTileMatrixData(sourceConn);
+DbQueries.InsertTileMatrix(sourceTileMatrixData, baseConn);
+List<TileInfo> tileInfo = DbQueries.ReadTileData(sourceConn);
+DbQueries.InsertTileData(tileInfo, baseConn);
 DbQueries.UpdateExtent(baseConn, sourceConn);
 Console.WriteLine("your request completed succssefully");
 
 baseConn.Close();
 sourceConn.Close();
-
-
