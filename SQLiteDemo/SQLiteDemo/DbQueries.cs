@@ -27,7 +27,7 @@ namespace SQLiteDemo
             return name;
         }
 
-        static Coordinate CalcAxisEdge(Edge edgeSide, SQLiteConnection conn)
+        static Coordinate CalcAxisEdgeCorrdinates(Edge edgeSide, SQLiteConnection conn)
         {
             int xCol;
             int yCol;
@@ -80,10 +80,10 @@ namespace SQLiteDemo
         public static void UpdateExtent(SQLiteConnection connectionToBaseGKPG, SQLiteConnection connectionToSourceGKPG)
         {
 
-            Coordinate area1MinCoordinates = CalcAxisEdge(Edge.Min, connectionToBaseGKPG);
-            Coordinate area2MinCoordinates = CalcAxisEdge(Edge.Min, connectionToSourceGKPG);
-            Coordinate area1MaxCoordinates = CalcAxisEdge(Edge.Max, connectionToBaseGKPG);
-            Coordinate area2MaxCoordinates = CalcAxisEdge(Edge.Max, connectionToBaseGKPG);
+            Coordinate area1MinCoordinates = CalcAxisEdgeCorrdinates(Edge.Min, connectionToBaseGKPG);
+            Coordinate area2MinCoordinates = CalcAxisEdgeCorrdinates(Edge.Min, connectionToSourceGKPG);
+            Coordinate area1MaxCoordinates = CalcAxisEdgeCorrdinates(Edge.Max, connectionToBaseGKPG);
+            Coordinate area2MaxCoordinates = CalcAxisEdgeCorrdinates(Edge.Max, connectionToBaseGKPG);
 
             Coordinate minCoordinates = Coordinate.EdgeCoordinatesByEdgeSide(area1MinCoordinates, area2MinCoordinates, Math.Min);
             Coordinate maxCoordinates = Coordinate.EdgeCoordinatesByEdgeSide(area1MaxCoordinates, area2MaxCoordinates, Math.Max);
